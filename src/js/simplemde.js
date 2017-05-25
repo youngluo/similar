@@ -618,12 +618,12 @@ function drawLink(editor) {
 	var stat = getState(cm);
 	var options = editor.options;
 	var url = "http://";
-	if(options.promptURLs) {
-		url = prompt(options.promptTexts.link);
-		if(!url) {
-			return false;
-		}
-	}
+	// if(options.promptURLs) {
+	// 	url = prompt(options.promptTexts.link);
+	// 	if(!url) {
+	// 		return false;
+	// 	}
+	// }
 	_replaceSelection(cm, stat.link, options.insertTexts.link, url);
 }
 
@@ -635,11 +635,11 @@ function drawImage(editor) {
 	var stat = getState(cm);
 	var options = editor.options;
 	var url = "http://";
-	if(options.promptURLs) {
-		url = prompt(options.promptTexts.image);
-		if(!url) {
-			return false;
-		}
+	if(typeof options.onUploadImage === "function") {
+		options.onUploadImage()
+			.then(function() {
+
+			});
 	}
 	_replaceSelection(cm, stat.image, options.insertTexts.image, url);
 }
