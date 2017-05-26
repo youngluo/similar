@@ -1,9 +1,9 @@
 function getError(action, option, xhr) {
     var msg;
     if (xhr.response) {
-        msg = xhr.status + (xhr.response.error || xhr.response);
+        msg = xhr.status + ' ' + (xhr.response.error || xhr.response);
     } else if (xhr.responseText) {
-        msg = xhr.status + xhr.responseText;
+        msg = xhr.status + ' ' + xhr.responseText;
     } else {
         msg = 'fail to post ' + action + ' ' + xhr.status;
     }
@@ -48,7 +48,7 @@ module.exports = function upload(option) {
     var formData = new FormData();
 
     if (option.data) {
-        Object.keys(option.data).map(function (key) {
+        Object.keys(option.data).forEach(function (key) {
             formData.append(key, option.data[key]);
         });
     }

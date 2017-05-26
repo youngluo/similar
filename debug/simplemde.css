@@ -673,6 +673,105 @@ span.CodeMirror-selectedtext { background: none; }
 .CodeMirror .CodeMirror-placeholder {
     opacity: .5;
 }
+
+#simple-dialog {
+    box-sizing: border-box;
+    position: fixed;
+    left: 50%;
+    top: 50px;
+    transform: translateX(-50%);
+    z-index: 999;
+    width: 380px;
+    height: 200px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    font-size: 14px;
+    color: #666;
+}
+
+#simple-dialog header {
+    position: relative;
+    padding: 12px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+#simple-dialog header i {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    text-align: center;
+    color: #ccc;
+    cursor: pointer;
+}
+
+#simple-dialog header i:hover {
+    color: #666;
+}
+
+#simple-dialog .main {
+    padding: 35px 20px;
+}
+
+#simple-dialog .main label {
+    display: inline-block;
+    width: 65px;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+}
+
+#simple-dialog .main .simple-dialog-url {
+    display: inline-block;
+    box-sizing: border-box;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    outline: none;
+    vertical-align: middle;
+}
+
+#simple-dialog .button {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    margin-left: 8px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    color: #666;
+    text-align: center;
+    vertical-align: middle;
+    outline: none;
+    cursor: pointer;
+}
+
+#simple-dialog .button:hover {
+    background-color: #eee;
+}
+
+#simple-dialog .button input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    opacity: 0;
+}
+
+#simple-dialog footer {
+    margin-top: 8px;
+    padding: 0 20px;
+    text-align: right;
+}
 .CodeMirror .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
     background: rgba(255, 0, 0, .15);
 }

@@ -15,7 +15,11 @@
     <script>
         var simplemde = new SimpleMDE({
             element: document.getElementById("markdown"),
-            promptURLs: true
+            imageUpload: {
+                url: '',
+                csrf: '',
+                token: ''
+            }
         });
     </script>
 </body>
