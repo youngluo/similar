@@ -1,17 +1,17 @@
-function getError(action, option, xhr) {
+function getError(url, option, xhr) {
     var msg;
     if (xhr.response) {
         msg = xhr.status + ' ' + (xhr.response.error || xhr.response);
     } else if (xhr.responseText) {
         msg = xhr.status + ' ' + xhr.responseText;
     } else {
-        msg = 'fail to post ' + action + ' ' + xhr.status;
+        msg = 'fail to post ' + url + ' ' + xhr.status;
     }
 
     var err = new Error(msg);
     err.status = xhr.status;
     err.method = 'post';
-    err.url = action;
+    err.url = url;
     return err;
 }
 
@@ -34,7 +34,7 @@ module.exports = function upload(option) {
     }
 
     var xhr = new XMLHttpRequest();
-    var action = option.action;
+    var url = option.url;
 
     if (xhr.upload) {
         xhr.upload.onprogress = function progress(e) {
@@ -61,13 +61,13 @@ module.exports = function upload(option) {
 
     xhr.onload = function onload() {
         if (xhr.status < 200 || xhr.status >= 300) {
-            return option.onError(getError(action, option, xhr));
+            return option.onError(getError(url, option, xhr));
         }
 
         option.onSuccess(getBody(xhr));
     };
 
-    xhr.open('post', action, true);
+    xhr.open('post', url, true);
 
     if (option.withCredentials && 'withCredentials' in xhr) {
         xhr.withCredentials = true;
