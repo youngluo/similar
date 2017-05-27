@@ -1,7 +1,7 @@
 function getError(url, option, xhr) {
     var msg;
     if (xhr.response) {
-        msg = xhr.status + ' ' + (xhr.response.error || xhr.response);
+        msg = xhr.status + ' ' + (xhr.response.message || xhr.response);
     } else if (xhr.responseText) {
         msg = xhr.status + ' ' + xhr.responseText;
     } else {
