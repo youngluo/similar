@@ -12,9 +12,7 @@
   "homepage": "https://github.com/youngluo/simarkdown",
   "main": "./dist/simplemde.min.js",
   "license": "MIT",
-  "author": {
-    "name": "luo yang"
-  },
+  "author": "luo yang",
   "bugs": {
     "url": "https://github.com/youngluo/simarkdown/issues"
   },
