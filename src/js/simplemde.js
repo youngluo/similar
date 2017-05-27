@@ -621,12 +621,6 @@ function drawLink(editor) {
 	var stat = getState(cm);
 	var options = editor.options;
 	var url = "http://";
-	// if(options.promptURLs) {
-	// 	url = prompt(options.promptTexts.link);
-	// 	if(!url) {
-	// 		return false;
-	// 	}
-	// }
 	_replaceSelection(cm, stat.link, options.insertTexts.link, url);
 }
 
