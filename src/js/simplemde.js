@@ -12,7 +12,7 @@ require("codemirror/mode/gfm/gfm.js");
 require("codemirror/mode/xml/xml.js");
 var CodeMirrorSpellChecker = require("codemirror-spell-checker");
 var marked = require("marked");
-var ajax = require("./ajax");
+var upload = require("./ajax");
 
 // Some variables
 var isMac = /Mac/.test(navigator.platform);
@@ -638,14 +638,16 @@ function drawImage(editor) {
 	var stat = getState(cm);
 	var options = editor.options;
 	var url = "http://";
-	var imageConfig = options.imageUpload;
+
+	var imageConfig = options.imageUploadConfig;
 	if (!imageConfig) {
 		return _replaceSelection(cm, stat.image, options.insertTexts.image, url);
 	}
+
 	if (closeDialog) {
 		return removeDialog();
 	}
-	closeDialog = drawDialog(imageConfig);
+	closeDialog = drawDialog();
 
 	doc.body.onclick = null;
 	doc.body.onclick = function (e) {
@@ -653,7 +655,7 @@ function drawImage(editor) {
 		if (className.indexOf("close-simple-dialog") > -1) {
 			removeDialog();
 		} else if (className.indexOf("submit-simple-dialog") > -1) {
-			var url = window.document.querySelector(".simple-dialog-url").value;
+			var url = doc.querySelector(".simple-dialog-url").value;
 			if (url) {
 				_replaceSelection(cm, stat.image, options.insertTexts.image, url);
 				removeDialog();
@@ -661,22 +663,27 @@ function drawImage(editor) {
 		}
 	};
 
-	var uploadImage = doc.getElementById("simple-dialog-image");
-	uploadImage.onchange = null;
-	uploadImage.onchange = function (e) {
-		console.log(e.target.files);
-	};
+	uolpadImage(imageConfig)
 }
 
-function drawDialog(config) {
+function drawDialog() {
 	var dialog = doc.createElement("div");
 	dialog.id = "simple-dialog";
-	dialog.innerHTML = "<header><span>添加图片</span><i class='fa fa-close close-simple-dialog'></i></header>" +
-		"<div class='main'>" +
-		"<label for='url'>图片地址</label><input type='text' id='url' class='simple-dialog-url' />" +
-		"<div class='button'><input type='file' name='simple-image' id='simple-dialog-image' accept='image/*' />本地上传</div>" +
-		"</div>" +
-		"<footer><button class='button close-simple-dialog'>取消</button><button class='button submit-simple-dialog'>确定</button></footer>";
+	var template = [
+		"<header><span>添加图片</span><i class='fa fa-close close-simple-dialog'></i></header>",
+		"<div class='main'>",
+		"<label for='url'>图片地址</label><input type='text' id='url' class='simple-dialog-url' />",
+		"<div class='button'>",
+		"<i class='fa fa-spinner fa-pulse simple-dialog-loading'></i>",
+		"<input type='file' name='simple-image' id='simple-dialog-image' accept='image/*' />本地上传",
+		"</div></div>",
+		"<div class='simple-dialog-hint'></div>",
+		"<footer>",
+		"<button class='button close-simple-dialog'>取消</button>",
+		"<button class='button submit-simple-dialog'>确定</button>",
+		"</footer>"
+	];
+	dialog.innerHTML = template.join("");
 	doc.body.appendChild(dialog);
 	return function () {
 		doc.body.removeChild(dialog);
@@ -688,6 +695,29 @@ function removeDialog() {
 		closeDialog();
 		closeDialog = null;
 	}
+}
+
+function uolpadImage(config) {
+	var uploadImage = doc.getElementById("simple-dialog-image");
+	var loading = doc.querySelector('.simple-dialog-loading');
+	uploadImage.onchange = null;
+	uploadImage.onchange = function (e) {
+		var file = e.target.files[0];
+		var uploadConfig = extend({}, config, {
+			file: file,
+			onSuccess: function (response) {
+				loading.style.display = "none";
+				doc.querySelector('.simple-dialog-url').value = response.data.url;
+			},
+			onError: function (error) {
+				loading.style.display = "none";
+				doc.querySelector('.simple-dialog-hint').innerHTML = error;
+				console.error(error);
+			}
+		});
+		loading.style.display = "inline-block";
+		upload(uploadConfig);
+	};
 }
 
 /**

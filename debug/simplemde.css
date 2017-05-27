@@ -712,8 +712,16 @@ span.CodeMirror-selectedtext { background: none; }
     color: #666;
 }
 
+#simple-dialog .simple-dialog-hint {
+    height: 25px;
+    line-height: 25px;
+    padding: 0 20px;
+    font-size: 12px;
+    color: #f30;
+}
+
 #simple-dialog .main {
-    padding: 35px 20px;
+    padding: 35px 20px 10px 20px;
 }
 
 #simple-dialog .main label {
@@ -771,6 +779,12 @@ span.CodeMirror-selectedtext { background: none; }
     margin-top: 8px;
     padding: 0 20px;
     text-align: right;
+}
+
+#simple-dialog .simple-dialog-loading {
+    display: none;
+    margin-right: 2px;
+    font-size: 12px;
 }
 .CodeMirror .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
     background: rgba(255, 0, 0, .15);

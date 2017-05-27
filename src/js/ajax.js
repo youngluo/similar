@@ -41,7 +41,7 @@ module.exports = function upload(option) {
             if (e.total > 0) {
                 e.percent = e.loaded / e.total * 100;
             }
-            option.onProgress(e);
+            option.onProgress && option.onProgress(e);
         };
     }
 
@@ -53,7 +53,7 @@ module.exports = function upload(option) {
         });
     }
 
-    formData.append(option.filename, option.file);
+    formData.append(option.fileFieldName, option.file);
 
     xhr.onerror = function error(e) {
         option.onError(e);
