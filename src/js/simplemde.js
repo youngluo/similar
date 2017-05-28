@@ -13,6 +13,7 @@ require("codemirror/mode/xml/xml.js");
 var CodeMirrorSpellChecker = require("codemirror-spell-checker");
 var marked = require("marked");
 var upload = require("./ajax");
+var toolbarCN = require("./toolbar.cn");
 
 // Some variables
 var isMac = /Mac/.test(navigator.platform);
@@ -641,7 +642,7 @@ function drawImage(editor) {
 	if (closeDialog) {
 		return removeDialog();
 	}
-	closeDialog = drawDialog();
+	closeDialog = drawDialog(imageConfig.wrapperClass);
 
 	doc.body.onclick = null;
 	doc.body.onclick = function (e) {
@@ -660,7 +661,7 @@ function drawImage(editor) {
 	uolpadImage(imageConfig)
 }
 
-function drawDialog() {
+function drawDialog(wrapperClass) {
 	var dialog = doc.createElement("div");
 	dialog.id = "simple-dialog";
 	var template = [
@@ -678,9 +679,13 @@ function drawDialog() {
 		"</footer>"
 	];
 	dialog.innerHTML = template.join("");
-	doc.body.appendChild(dialog);
+	if (wrapperClass) {
+		doc.querySelector("." + wrapperClass).appendChild(dialog);
+	} else {
+		doc.body.appendChild(dialog);
+	}
 	return function () {
-		doc.body.removeChild(dialog);
+		dialog.parentElement.removeChild(dialog);
 	}
 }
 
@@ -1286,16 +1291,6 @@ var toolbarBuiltInButtons = {
 	"separator-4": {
 		name: "separator-4"
 	},
-	"guide": {
-		name: "guide",
-		action: "https://simplemde.com/markdown-guide",
-		className: "fa fa-question-circle",
-		title: "Markdown Guide",
-		default: true
-	},
-	"separator-5": {
-		name: "separator-5"
-	},
 	"undo": {
 		name: "undo",
 		action: undo,
@@ -1307,8 +1302,20 @@ var toolbarBuiltInButtons = {
 		action: redo,
 		className: "fa fa-repeat no-disable",
 		title: "Redo"
+	},
+	"separator-5": {
+		name: "separator-5"
+	},
+	"guide": {
+		name: "guide",
+		action: "https://simplemde.com/markdown-guide",
+		className: "fa fa-question-circle",
+		title: "Markdown Guide",
+		default: true
 	}
 };
+
+toolbarBuiltInButtons = extend({}, toolbarBuiltInButtons, toolbarCN);
 
 var insertTexts = {
 	link: ["[", "](#url#)"],
@@ -1502,6 +1509,7 @@ SimpleMDE.prototype.render = function (el) {
 	}
 
 	this.element = el;
+	var simplemde = this;
 	var options = this.options;
 
 	var self = this;
@@ -1581,7 +1589,11 @@ SimpleMDE.prototype.render = function (el) {
 		this.gui.statusbar = this.createStatusbar();
 	}
 	if (options.autosave != undefined && options.autosave.enabled === true) {
-		this.autosave();
+		simplemde.autosave();
+		var cm = this.codemirror;
+		cm.on("change", function () {
+			simplemde.autosave();
+		});
 	}
 
 	this.gui.sideBySide = this.createSideBySide();
@@ -1641,25 +1653,17 @@ SimpleMDE.prototype.autosave = function () {
 		var el = document.getElementById("autosaved");
 		if (el != null && el != undefined && el != "") {
 			var d = new Date();
-			var hh = d.getHours();
+			var h = d.getHours();
 			var m = d.getMinutes();
-			var dd = "am";
-			var h = hh;
-			if (h >= 12) {
-				h = hh - 12;
-				dd = "pm";
-			}
-			if (h == 0) {
-				h = 12;
-			}
+			h = h < 10 ? "0" + h : h;
 			m = m < 10 ? "0" + m : m;
 
-			el.innerHTML = "Autosaved: " + h + ":" + m + " " + dd;
+			el.innerHTML = "自动保存：" + h + ":" + m;
 		}
 
-		this.autosaveTimeoutId = setTimeout(function () {
-			simplemde.autosave();
-		}, this.options.autosave.delay || 10000);
+		// this.autosaveTimeoutId = setTimeout(function () {
+		// 	simplemde.autosave();
+		// }, this.options.autosave.delay || 10000);
 	} else {
 		console.log("SimpleMDE: localStorage not available, cannot autosave");
 	}
@@ -2088,11 +2092,7 @@ SimpleMDE.prototype.toTextArea = function () {
 
 	cm.toTextArea();
 
-	if (this.autosaveTimeoutId) {
-		clearTimeout(this.autosaveTimeoutId);
-		this.autosaveTimeoutId = undefined;
-		this.clearAutosavedValue();
-	}
+	this.clearAutosavedValue();
 };
 
 module.exports = SimpleMDE;

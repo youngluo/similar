@@ -2227,7 +2227,7 @@ Typo.prototype = {
 if (typeof module !== 'undefined') {
 	module.exports = Typo;
 }
-}).call(this,require("buffer").Buffer,"/node_modules\\.1.1.2@codemirror-spell-checker\\node_modules\\typo-js")
+}).call(this,require("buffer").Buffer,"/node_modules/.1.1.2@codemirror-spell-checker/node_modules/typo-js")
 },{"buffer":7,"fs":5}],3:[function(require,module,exports){
 // Use strict mode (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode)
 "use strict";
@@ -15687,6 +15687,7 @@ require("codemirror/mode/xml/xml.js");
 var CodeMirrorSpellChecker = require("codemirror-spell-checker");
 var marked = require("marked");
 var upload = require("./ajax");
+var toolbarCN = require("./toolbar.cn");
 
 // Some variables
 var isMac = /Mac/.test(navigator.platform);
@@ -16315,7 +16316,7 @@ function drawImage(editor) {
 	if (closeDialog) {
 		return removeDialog();
 	}
-	closeDialog = drawDialog();
+	closeDialog = drawDialog(imageConfig.wrapperClass);
 
 	doc.body.onclick = null;
 	doc.body.onclick = function (e) {
@@ -16334,7 +16335,7 @@ function drawImage(editor) {
 	uolpadImage(imageConfig)
 }
 
-function drawDialog() {
+function drawDialog(wrapperClass) {
 	var dialog = doc.createElement("div");
 	dialog.id = "simple-dialog";
 	var template = [
@@ -16352,9 +16353,13 @@ function drawDialog() {
 		"</footer>"
 	];
 	dialog.innerHTML = template.join("");
-	doc.body.appendChild(dialog);
+	if (wrapperClass) {
+		doc.querySelector("." + wrapperClass).appendChild(dialog);
+	} else {
+		doc.body.appendChild(dialog);
+	}
 	return function () {
-		doc.body.removeChild(dialog);
+		dialog.parentElement.removeChild(dialog);
 	}
 }
 
@@ -16960,16 +16965,6 @@ var toolbarBuiltInButtons = {
 	"separator-4": {
 		name: "separator-4"
 	},
-	"guide": {
-		name: "guide",
-		action: "https://simplemde.com/markdown-guide",
-		className: "fa fa-question-circle",
-		title: "Markdown Guide",
-		default: true
-	},
-	"separator-5": {
-		name: "separator-5"
-	},
 	"undo": {
 		name: "undo",
 		action: undo,
@@ -16981,8 +16976,20 @@ var toolbarBuiltInButtons = {
 		action: redo,
 		className: "fa fa-repeat no-disable",
 		title: "Redo"
+	},
+	"separator-5": {
+		name: "separator-5"
+	},
+	"guide": {
+		name: "guide",
+		action: "https://simplemde.com/markdown-guide",
+		className: "fa fa-question-circle",
+		title: "Markdown Guide",
+		default: true
 	}
 };
+
+toolbarBuiltInButtons = extend({}, toolbarBuiltInButtons, toolbarCN);
 
 var insertTexts = {
 	link: ["[", "](#url#)"],
@@ -17176,6 +17183,7 @@ SimpleMDE.prototype.render = function (el) {
 	}
 
 	this.element = el;
+	var simplemde = this;
 	var options = this.options;
 
 	var self = this;
@@ -17255,7 +17263,11 @@ SimpleMDE.prototype.render = function (el) {
 		this.gui.statusbar = this.createStatusbar();
 	}
 	if (options.autosave != undefined && options.autosave.enabled === true) {
-		this.autosave();
+		simplemde.autosave();
+		var cm = this.codemirror;
+		cm.on("change", function () {
+			simplemde.autosave();
+		});
 	}
 
 	this.gui.sideBySide = this.createSideBySide();
@@ -17315,25 +17327,17 @@ SimpleMDE.prototype.autosave = function () {
 		var el = document.getElementById("autosaved");
 		if (el != null && el != undefined && el != "") {
 			var d = new Date();
-			var hh = d.getHours();
+			var h = d.getHours();
 			var m = d.getMinutes();
-			var dd = "am";
-			var h = hh;
-			if (h >= 12) {
-				h = hh - 12;
-				dd = "pm";
-			}
-			if (h == 0) {
-				h = 12;
-			}
+			h = h < 10 ? "0" + h : h;
 			m = m < 10 ? "0" + m : m;
 
-			el.innerHTML = "Autosaved: " + h + ":" + m + " " + dd;
+			el.innerHTML = "自动保存：" + h + ":" + m;
 		}
 
-		this.autosaveTimeoutId = setTimeout(function () {
-			simplemde.autosave();
-		}, this.options.autosave.delay || 10000);
+		// this.autosaveTimeoutId = setTimeout(function () {
+		// 	simplemde.autosave();
+		// }, this.options.autosave.delay || 10000);
 	} else {
 		console.log("SimpleMDE: localStorage not available, cannot autosave");
 	}
@@ -17762,13 +17766,80 @@ SimpleMDE.prototype.toTextArea = function () {
 
 	cm.toTextArea();
 
-	if (this.autosaveTimeoutId) {
-		clearTimeout(this.autosaveTimeoutId);
-		this.autosaveTimeoutId = undefined;
-		this.clearAutosavedValue();
-	}
+	this.clearAutosavedValue();
 };
 
 module.exports = SimpleMDE;
-},{"./ajax":18,"./codemirror/tablist":19,"codemirror":13,"codemirror-spell-checker":3,"codemirror/addon/display/fullscreen.js":8,"codemirror/addon/display/placeholder.js":9,"codemirror/addon/edit/continuelist.js":10,"codemirror/addon/mode/overlay.js":11,"codemirror/addon/selection/mark-selection.js":12,"codemirror/mode/gfm/gfm.js":14,"codemirror/mode/markdown/markdown.js":15,"codemirror/mode/xml/xml.js":17,"marked":1}]},{},[20])(20)
+},{"./ajax":18,"./codemirror/tablist":19,"./toolbar.cn":21,"codemirror":13,"codemirror-spell-checker":3,"codemirror/addon/display/fullscreen.js":8,"codemirror/addon/display/placeholder.js":9,"codemirror/addon/edit/continuelist.js":10,"codemirror/addon/mode/overlay.js":11,"codemirror/addon/selection/mark-selection.js":12,"codemirror/mode/gfm/gfm.js":14,"codemirror/mode/markdown/markdown.js":15,"codemirror/mode/xml/xml.js":17,"marked":1}],21:[function(require,module,exports){
+module.exports = {
+    "bold": {
+        title: "粗体",
+        default: true
+    },
+    "italic": {
+        title: "斜体",
+        default: true
+    },
+    "strikethrough": {
+        title: "删除线",
+        default: true
+    },
+    "heading": {
+        title: "标题",
+        default: true
+    },
+    "code": {
+        title: "代码",
+        default: true
+    },
+    "quote": {
+        title: "引用",
+        default: true
+    },
+    "unordered-list": {
+        title: "无序列表",
+        default: true
+    },
+    "ordered-list": {
+        title: "有序列表",
+        default: true
+    },
+    "link": {
+        title: "插入链接",
+        default: true
+    },
+    "image": {
+        title: "插入图片",
+        default: true
+    },
+    "table": {
+        title: "插入表格",
+        default: true
+    },
+    "preview": {
+        title: "预览",
+        default: true
+    },
+    "side-by-side": {
+        title: "并排预览",
+        default: true
+    },
+    "fullscreen": {
+        title: "全屏",
+        default: true
+    },
+    "guide": {
+        title: "Markdown指南",
+        default: true
+    },
+    "undo": {
+        title: "撤销",
+        default: true
+    },
+    "redo": {
+        title: "恢复",
+        default: true
+    }
+};
+},{}]},{},[20])(20)
 });

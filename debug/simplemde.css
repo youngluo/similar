@@ -550,11 +550,11 @@ span.CodeMirror-selectedtext { background: none; }
 }
 
 .editor-statusbar .lines:before {
-    content: 'lines: '
+    content: '行数：'
 }
 
 .editor-statusbar .words:before {
-    content: 'words: '
+    content: '字数：'
 }
 
 .editor-statusbar .characters:before {
@@ -674,6 +674,10 @@ span.CodeMirror-selectedtext { background: none; }
     opacity: .5;
 }
 
+.editor-toolbar a {
+    outline: none;
+}
+
 #simple-dialog {
     box-sizing: border-box;
     position: fixed;
@@ -681,8 +685,9 @@ span.CodeMirror-selectedtext { background: none; }
     top: 50px;
     transform: translateX(-50%);
     z-index: 999;
-    width: 380px;
+    width: 360px;
     height: 200px;
+    padding: 0 20px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     font-size: 14px;
@@ -691,6 +696,7 @@ span.CodeMirror-selectedtext { background: none; }
 
 #simple-dialog header {
     position: relative;
+    margin: 0 -20px;
     padding: 12px 20px;
     border-bottom: 1px solid #ddd;
 }
@@ -715,13 +721,12 @@ span.CodeMirror-selectedtext { background: none; }
 #simple-dialog .simple-dialog-hint {
     height: 25px;
     line-height: 25px;
-    padding: 0 20px;
     font-size: 12px;
     color: #f30;
 }
 
 #simple-dialog .main {
-    padding: 35px 20px 10px 20px;
+    padding: 35px 0 10px 0;
 }
 
 #simple-dialog .main label {
@@ -735,6 +740,7 @@ span.CodeMirror-selectedtext { background: none; }
 #simple-dialog .main .simple-dialog-url {
     display: inline-block;
     box-sizing: border-box;
+    width: 160px;
     height: 30px;
     line-height: 30px;
     padding: 0 8px;
@@ -747,10 +753,10 @@ span.CodeMirror-selectedtext { background: none; }
     position: relative;
     box-sizing: border-box;
     display: inline-block;
-    width: 80px;
+    width: 85px;
     height: 30px;
     line-height: 30px;
-    margin-left: 8px;
+    margin-left: 10px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 3px;
@@ -777,8 +783,12 @@ span.CodeMirror-selectedtext { background: none; }
 
 #simple-dialog footer {
     margin-top: 8px;
-    padding: 0 20px;
     text-align: right;
+}
+
+#simple-dialog footer button {
+    margin: 0;
+    padding: 0;
 }
 
 #simple-dialog .simple-dialog-loading {
