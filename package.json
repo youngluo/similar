@@ -1,42 +1,30 @@
 {
-  "name": "simarkdown",
-  "version": "1.1.0",
-  "description": "A simple, beautiful, and embeddable JavaScript Markdown editor",
-  "keywords": [
-    "embeddable",
-    "markdown",
-    "editor",
-    "javascript",
-    "simarkdown"
-  ],
-  "homepage": "https://github.com/youngluo/simarkdown",
-  "main": "./dist/simplemde.min.js",
-  "license": "MIT",
-  "author": "luo yang",
-  "bugs": {
-    "url": "https://github.com/youngluo/simarkdown/issues"
+  "name": "similar",
+  "version": "1.0.0",
+  "description": "A markdown",
+  "main": "dist/index.js",
+  "directories": {
+    "test": "test"
   },
-  "dependencies": {
-    "codemirror": "*",
-    "codemirror-spell-checker": "*",
-    "marked": "*"
-  },
-  "devDependencies": {
-    "browserify": "*",
-    "debug": "*",
-    "gulp": "*",
-    "gulp-concat": "*",
-    "gulp-debug": "*",
-    "gulp-header": "*",
-    "gulp-jsbeautifier": "*",
-    "gulp-clean-css": "*",
-    "gulp-rename": "*",
-    "gulp-uglify": "*",
-    "vinyl-source-stream": "*",
-    "vinyl-buffer": "*"
+  "scripts": {
+    "test": ""
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/youngluo/simarkdown"
+    "url": "git+https://github.com/youngluo/similar.git"
+  },
+  "keywords": [
+    "similar",
+    "markdown"
+  ],
+  "author": "Young Luo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/youngluo/similar/issues"
+  },
+  "homepage": "https://github.com/youngluo/similar#readme",
+  "devDependencies": {
+    "eslint": "^4.6.1",
+    "eslint-plugin-standard": "^3.0.1"
   }
 }
